@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="add-consistency-checks" author="rinklinky">
+        <sql dbms="postgresql">
+            CREATE FUNCTION validate_parent_task(foreign_parent_id BIGINT, child_document_id BIGINT, child_status VARCHAR(255))
+            RETURNS BOOLEAN AS
+            $$ BEGIN RETURN (
+            SELECT child_document_id = t.document_id
+            AND NOT(t.status IN ('WAITING', 'IN_PROGRESS', 'REJECTED')
+                AND child_status IN ('IN_PROGRESS', 'COMPLETED', 'REJECTED'))
+            FROM task t WHERE t.id = foreign_parent_id
+            );
+            END $$
+            LANGUAGE PLPGSQL VOLATILE RETURNS NULL ON NULL INPUT;
+
+            ALTER TABLE task ADD CONSTRAINT task_parent_check
+            CHECK (validate_parent_task(parent_id, document_id, status));
+
+            ALTER TABLE task ADD CONSTRAINT task_parent_unique
+            UNIQUE NULLS NOT DISTINCT (document_id, parent_id) DEFERRABLE INITIALLY DEFERRED;
+
+            ALTER TABLE task ADD CONSTRAINT status_parent_child_inequality_check
+            CHECK (id != parent_id);
+
+            ALTER TABLE task ADD CONSTRAINT task_status_check
+            CHECK (status IN ('WAITING', 'IN_PROGRESS', 'COMPLETED', 'REJECTED'));
+
+            ALTER TABLE task ADD CONSTRAINT task_type_check
+            CHECK (type IN ('SIGN', 'EDIT', 'ISSUE_NEW_DOCUMENT', 'CONFIRM_SUBSIDIARY_TASKS_COMPLETION',
+            'CONFIRM_EMAIL_SENDING'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

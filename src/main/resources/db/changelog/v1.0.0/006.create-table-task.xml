@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-table-task" author="rinklinky">
+        <createTable tableName="task">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="task_document_id_fk_document_id"
+                             references="document(id)" deleteCascade="true"/>
+            </column>
+            <column name="parent_id" type="BIGINT">
+                <constraints uniqueConstraintName="task_parent_id_unique" foreignKeyName="task_parent_id_fk_task_id"
+                             references="task(id)"/>
+            </column>
+            <column name="appointee_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="task_appointee_id_fk_employee_id"
+                             references="employee(id)"/>
+            </column>
+            <column name="deadline" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issuer_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="task_issuer_id_fk_employee_id"
+                             references="employee(id)"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-document-parent-task-unique" author="rinklinky">
+        <addUniqueConstraint tableName="task" columnNames="document_id,parent_id"
+                             deferrable="true" initiallyDeferred="true"/>
+    </changeSet>
+
+    <changeSet id="create-sequence-task-seq" author="rinklinky">
+        <createSequence sequenceName="task_seq" startValue="1" incrementBy="50" cacheSize="1"/>
+    </changeSet>
+
+</databaseChangeLog>

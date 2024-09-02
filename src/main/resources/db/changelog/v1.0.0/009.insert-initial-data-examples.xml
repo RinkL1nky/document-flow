@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-initial-data-examples" author="rinklinky">
+        <insert tableName="employee">
+            <column name="id" valueComputed="(SELECT NEXTVAL('employee_seq'))"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$10$6CWzACjCOIlqaGmgC.VTjeLzYXvXZlWQnea8GlvKuAstHG69caO2i"/>
+            <column name="email" value="documentflowadmin@yandex.ru"/>
+            <column name="first_name" value="Алексей"/>
+            <column name="last_name" value="Копенко"/>
+        </insert>
+        <insert tableName="employee_authority">
+            <column name="employee_id" valueComputed="(SELECT MAX(e.id) FROM employee e)"/>
+            <column name="authority_name" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="employee_authority">
+            <column name="employee_id" valueComputed="(SELECT MAX(e.id) FROM employee e)"/>
+            <column name="authority_name" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="id" valueComputed="(SELECT NEXTVAL('employee_seq')-49)"/>
+            <column name="username" value="ilya1901"/>
+            <column name="password" value="$2a$10$6CWzACjCOIlqaGmgC.VTjeLzYXvXZlWQnea8GlvKuAstHG69caO2i"/>
+            <column name="email" value="ilya1901@yandex.ru"/>
+            <column name="first_name" value="Илья"/>
+            <column name="last_name" value="Сорокин"/>
+        </insert>
+        <insert tableName="employee_authority">
+            <column name="employee_id" valueComputed="(SELECT MAX(e.id) FROM employee e)"/>
+            <column name="authority_name" value="ROLE_USER"/>
+        </insert>
+        <insert tableName="employee">
+            <column name="id" valueComputed="(SELECT MAX(e.id)+1 FROM employee e)"/>
+            <column name="username" value="alex999"/>
+            <column name="password" value="$2a$10$6CWzACjCOIlqaGmgC.VTjeLzYXvXZlWQnea8GlvKuAstHG69caO2i"/>
+            <column name="email" value="alex999@yandex.ru"/>
+            <column name="first_name" value="Александр"/>
+            <column name="last_name" value="Пушкин"/>
+        </insert>
+        <insert tableName="employee_authority">
+            <column name="employee_id" valueComputed="(SELECT MAX(e.id) FROM employee e)"/>
+            <column name="authority_name" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="document_type">
+            <column name="name" value="Договор"/>
+        </insert>
+        <insert tableName="document_type">
+            <column name="name" value="Счёт-фактура"/>
+        </insert>
+        <insert tableName="document_type">
+            <column name="name" value="Товарная накладная"/>
+        </insert>
+
+        <insert tableName="file_metadata">
+            <column name="id" valueComputed="(SELECT NEXTVAL('file_metadata_seq'))"/>
+            <column name="bucket" value="documentflow"/>
+            <column name="path"
+                    valueComputed="(SELECT CONCAT(e.id, '/1e879318-a48e-4126-9c1f-a64bec9d9afc') FROM employee e WHERE e.username = 'admin')"/>
+            <column name="content_type" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+            <column name="filename" value="договор1.docx"/>
+            <column name="uploader_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="document">
+            <column name="id" valueComputed="(SELECT NEXTVAL('document_seq'))"/>
+            <column name="name" value="Договор 1"/>
+            <column name="comment" value="Какая то информация о договоре 1"/>
+            <column name="type_id" valueComputed="(SELECT t.id FROM document_type t WHERE t.name = 'Договор')"/>
+            <column name="file_id" valueComputed="(SELECT MAX(f.id) FROM file_metadata f)"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT NEXTVAL('task_seq'))"/>
+            <column name="name" value="Составить вспомогательный договор 2 для договора 1"/>
+            <column name="comment" value="Cогласно шаблону 212"/>
+            <column name="type" value="ISSUE_NEW_DOCUMENT"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" value="NULL"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '7 DAYS')"/>
+            <column name="status" value="IN_PROGRESS"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT NEXTVAL('task_seq')-49)"/>
+            <column name="name" value="Переделать договор 1 согласно шаблону 512"/>
+            <column name="comment" value="Заказчик X, цель сделки Y"/>
+            <column name="type" value="EDIT"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '2 DAYS')"/>
+            <column name="status" value="WAITING"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Подпись для договора 1"/>
+            <column name="comment" value="быстро подписать"/>
+            <column name="type" value="SIGN"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '1 DAYS')"/>
+            <column name="status" value="WAITING"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Проверить качество вспомогательных документов"/>
+            <column name="comment" value=""/>
+            <column name="type" value="CONFIRM_SUBSIDIARY_TASKS_COMPLETION"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '7 DAYS')"/>
+            <column name="status" value="WAITING"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Подтвердить отправку документов"/>
+            <column name="comment" value=""/>
+            <column name="type" value="CONFIRM_EMAIL_SENDING"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '1 DAYS')"/>
+            <column name="status" value="WAITING"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="email_task">
+            <column name="task_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="destination_email" value="rinklinky@yandex.ru"/>
+            <column name="subject" value="Компания A готова к заключеню сделки"/>
+            <column name="template_name" value="documentTreeReport"/>
+        </insert>
+
+        <insert tableName="file_metadata">
+            <column name="id" valueComputed="(SELECT NEXTVAL('file_metadata_seq')-49)"/>
+            <column name="bucket" value="documentflow"/>
+            <column name="path"
+                    valueComputed="(SELECT CONCAT(e.id, '/59f54f75-4741-486c-9b0e-6e3e2eb3cb29') FROM employee e WHERE e.username = 'alex999')"/>
+            <column name="content_type" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+            <column name="filename" value="договор2.docx"/>
+            <column name="uploader_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="document">
+            <column name="id" valueComputed="(SELECT NEXTVAL('document_seq')-49)"/>
+            <column name="name" value="Договор 2"/>
+            <column name="comment" value="Какая то информация о договоре 2"/>
+            <column name="type_id" valueComputed="(SELECT t.id FROM document_type t WHERE t.name = 'Договор')"/>
+            <column name="file_id" valueComputed="(SELECT MAX(f.id) FROM file_metadata f)"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Добавить шапку"/>
+            <column name="comment" value="Заказчик X, цель сделки Y"/>
+            <column name="type" value="EDIT"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" value="NULL"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '2 DAYS')"/>
+            <column name="status" value="COMPLETED"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Составить накладную для договора 2"/>
+            <column name="comment" value="Cогласно шаблону 312"/>
+            <column name="type" value="ISSUE_NEW_DOCUMENT"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '7 DAYS')"/>
+            <column name="status" value="COMPLETED"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Составить вспомогательный документ 4 для договора 2"/>
+            <column name="comment" value="Cогласно шаблону 412"/>
+            <column name="type" value="ISSUE_NEW_DOCUMENT"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '7 DAYS')"/>
+            <column name="status" value="COMPLETED"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Проверить качество вложенных вспомогательных документов"/>
+            <column name="comment" value=""/>
+            <column name="type" value="CONFIRM_SUBSIDIARY_TASKS_COMPLETION"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '7 DAYS')"/>
+            <column name="status" value="COMPLETED"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="task">
+            <column name="id" valueComputed="(SELECT MAX(t.id)+1 FROM task t)"/>
+            <column name="name" value="Подтвердить отправку документов"/>
+            <column name="comment" value=""/>
+            <column name="type" value="CONFIRM_EMAIL_SENDING"/>
+            <column name="document_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="appointee_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="deadline" valueComputed="(SELECT NOW() + INTERVAL '1 DAYS')"/>
+            <column name="status" value="IN_PROGRESS"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='alex999')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="email_task">
+            <column name="task_id" valueComputed="(SELECT MAX(t.id) FROM task t)"/>
+            <column name="destination_email" value="rinklinky@yandex.ru"/>
+            <column name="subject" value="Привет Завод Б, вы согласны?"/>
+            <column name="template_name" value="documentTreeReport"/>
+        </insert>
+
+        <insert tableName="file_metadata">
+            <column name="id" valueComputed="(SELECT MAX(f.id)+1 FROM file_metadata f)"/>
+            <column name="bucket" value="documentflow"/>
+            <column name="path"
+                    valueComputed="(SELECT CONCAT(e.id, '/f92d031d-3baf-4b48-a48e-a6248a3963ee') FROM employee e WHERE e.username = 'admin')"/>
+            <column name="content_type" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+            <column name="filename" value="накладная3.docx"/>
+            <column name="uploader_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="document">
+            <column name="id" valueComputed="(SELECT MAX(d.id)+1 FROM document d)"/>
+            <column name="name" value="Накладная"/>
+            <column name="comment" value="Какая то информация о накладной"/>
+            <column name="type_id" valueComputed="(SELECT t.id FROM document_type t WHERE t.name = 'Товарная накладная')"/>
+            <column name="file_id" valueComputed="(SELECT MAX(f.id) FROM file_metadata f)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(d.id) FROM document d)"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='admin')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+
+        <insert tableName="file_metadata">
+            <column name="id" valueComputed="(SELECT MAX(f.id)+1 FROM file_metadata f)"/>
+            <column name="bucket" value="documentflow"/>
+            <column name="path"
+                    valueComputed="(SELECT CONCAT(e.id, '/fcd7cd1e-241d-431f-be47-cd607a71f551') FROM employee e WHERE e.username = 'ilya1901')"/>
+            <column name="content_type" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+            <column name="filename" value="документ4.docx"/>
+            <column name="uploader_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+        <insert tableName="document">
+            <column name="id" valueComputed="(SELECT MAX(d.id)+1 FROM document d)"/>
+            <column name="name" value="документ 4 название"/>
+            <column name="comment" value="Какая то информация о документе 4"/>
+            <column name="type_id" valueComputed="(SELECT t.id FROM document_type t WHERE t.name = 'Договор')"/>
+            <column name="file_id" valueComputed="(SELECT MAX(f.id) FROM file_metadata f)"/>
+            <column name="parent_id" valueComputed="(SELECT MAX(d.id)-1 FROM document d)"/>
+            <column name="issuer_id" valueComputed="(SELECT e.id FROM employee e WHERE e.username='ilya1901')"/>
+            <column name="created_at" valueComputed="(SELECT NOW())"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

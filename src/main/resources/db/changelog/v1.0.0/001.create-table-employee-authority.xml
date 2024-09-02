@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-table-employee-authority" author="rinklinky">
+        <createTable tableName="employee_authority">
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="employee_authority_employee_id_fk_employee_id"
+                             references="employee(id)" deleteCascade="true"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-employee-authority-primary-key" author="rinklinky">
+        <addPrimaryKey tableName="employee_authority" columnNames="employee_id,authority_name"
+                       constraintName="employee_authority_primary"/>
+    </changeSet>
+
+</databaseChangeLog>

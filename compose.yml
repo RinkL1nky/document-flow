@@ -1,0 +1,51 @@
+version: '3.4'
+
+x-minio-variables: &minio-variables
+  MINIO_ROOT_USER: "root"
+  MINIO_ROOT_PASSWORD: "testpass"
+
+services:
+  postgres:
+    image: 'postgres:16.4'
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testpass
+      - POSTGRES_DB=documents
+  redis:
+    image: "redis:latest"
+    container_name: redis
+    ports:
+      - "6379:6379"
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    volumes:
+      - ./minio/data:/data
+    environment:
+      LANG: en_US.UTF-8
+      <<: *minio-variables
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+  fill-minio-with-example-data:
+    image: minio/mc
+    depends_on:
+      - minio
+    volumes:
+      - ./minio/mc-example-data:/example-data
+    environment:
+      <<: *minio-variables
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set documentflow http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}) do echo 'waiting for connection...' && sleep 1; done;
+      until (/usr/bin/mc put /example-data/договор1.docx documentflow/documentflow/1/1e879318-a48e-4126-9c1f-a64bec9d9afc) do echo 'upload try...' && sleep 1; done;
+      /usr/bin/mc put /example-data/договор2.docx documentflow/documentflow/3/59f54f75-4741-486c-9b0e-6e3e2eb3cb29;
+      /usr/bin/mc put /example-data/накладная3.docx documentflow/documentflow/1/f92d031d-3baf-4b48-a48e-a6248a3963ee;
+      /usr/bin/mc put /example-data/документ4.docx documentflow/documentflow/2/fcd7cd1e-241d-431f-be47-cd607a71f551;
+      exit 0;
+      "

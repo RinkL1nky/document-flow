@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="add-tag-1.0.0" author="rinklinky">
+        <tagDatabase tag="v1.0.0"/>
+    </changeSet>
+    
+    <include file="000.create-table-employee.xml" relativeToChangelogFile="true"/>
+    <include file="001.create-table-employee-authority.xml" relativeToChangelogFile="true"/>
+    <include file="002.create-table-file-metadata.xml" relativeToChangelogFile="true"/>
+    <include file="003.create-table-document-type.xml" relativeToChangelogFile="true"/>
+    <include file="004.create-table-document.xml" relativeToChangelogFile="true"/>
+    <include file="005.create-table-document-signature.xml" relativeToChangelogFile="true"/>
+    <include file="006.create-table-task.xml" relativeToChangelogFile="true"/>
+    <include file="007.create-table-email-task.xml" relativeToChangelogFile="true"/>
+    <include file="008.add-column-expires-at-to-file-metadata.xml" relativeToChangelogFile="true"/>
+    <include file="009.insert-initial-data-examples.xml" relativeToChangelogFile="true"/>
+    <include file="010.add-consistency-checks.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
