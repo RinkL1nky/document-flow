@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,8 @@ import ru.egartech.documentflow.repository.DocumentRepository;
 import ru.egartech.documentflow.repository.DocumentTypeRepository;
 import ru.egartech.documentflow.responsewrapper.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
+import ru.egartech.documentflow.service.v1.DocumentService;
+import ru.egartech.documentflow.service.v1.SimpleStorageService;
 import ru.egartech.documentflow.service.v1.mapper.DocumentMapper;
 import ru.egartech.documentflow.util.AuthenticationFacade;
 

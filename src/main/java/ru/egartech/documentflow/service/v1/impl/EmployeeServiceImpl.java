@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,7 @@ import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.EmployeeRepository;
 import ru.egartech.documentflow.responsewrapper.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
+import ru.egartech.documentflow.service.v1.EmployeeService;
 import ru.egartech.documentflow.service.v1.mapper.EmployeeMapper;
 
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,8 @@ import ru.egartech.documentflow.exception.ApplicationException;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.EmailTaskRepository;
 import ru.egartech.documentflow.repository.TaskRepository;
+import ru.egartech.documentflow.service.v1.EmailTaskService;
+import ru.egartech.documentflow.service.v1.TaskService;
 import ru.egartech.documentflow.service.v1.mapper.EmailTaskMapper;
 import ru.egartech.documentflow.util.AuthenticationFacade;
 

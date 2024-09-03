@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,6 +16,7 @@ import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.DocumentTypeRepository;
 import ru.egartech.documentflow.responsewrapper.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
+import ru.egartech.documentflow.service.v1.DocumentTypeService;
 import ru.egartech.documentflow.service.v1.mapper.DocumentTypeMapper;
 
 @RequiredArgsConstructor
