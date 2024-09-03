@@ -20,6 +20,7 @@ spring:
           batch_size: 25
         connection:
           provider_disables_autocommit: true
+        default_batch_fetch_size: 50
     database: POSTGRESQL
     hibernate:
       ddl-auto: validate

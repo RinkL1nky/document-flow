@@ -1,8 +1,5 @@
 package ru.egartech.documentflow.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 import ru.egartech.documentflow.entity.Document;
@@ -12,10 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSpecificationExecutor<Document> {
-
-    @EntityGraph(attributePaths = {"signatures"})
-    @Override
-    Page<Document> findAll(Specification<Document> specification, Pageable pageable);
 
     @EntityGraph(attributePaths = {"signatures"})
     Optional<Document> findWithSignaturesById(Long documentId);
