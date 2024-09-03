@@ -3,6 +3,8 @@ package ru.egartech.documentflow.dto.v1.response;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Builder
 @Data
 public class EmployeeResponseDto {
@@ -16,5 +18,7 @@ public class EmployeeResponseDto {
     private String lastName;
 
     private String email;
+
+    private List<String> authorities;
 
 }

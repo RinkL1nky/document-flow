@@ -29,7 +29,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     @Override
     public EmployeeResponseDto getEmployee(Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
+        Employee employee = employeeRepository.findWithAuthoritiesById(employeeId)
                 .orElseThrow(() -> new NotFoundException("employeeId"));
 
         return employeeMapper.convertToDto(employee);

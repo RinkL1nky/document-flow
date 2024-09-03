@@ -12,6 +12,9 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
 
     @EntityGraph(attributePaths = {"authorities"})
+    Optional<Employee> findWithAuthoritiesById(Long employeeId);
+
+    @EntityGraph(attributePaths = {"authorities"})
     Optional<Employee> findByUsername(String username);
 
 }
