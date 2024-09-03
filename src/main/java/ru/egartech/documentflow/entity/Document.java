@@ -48,6 +48,7 @@ public class Document {
     @ManyToOne(fetch = FetchType.LAZY)
     private Document parent;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "document_signature", joinColumns = @JoinColumn(name = "document_id"))
     private Set<DocumentSignature> signatures = new HashSet<>();

@@ -49,18 +49,23 @@ public class Employee implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Builder.Default
     @NotNull
     private boolean accountNonExpired = Boolean.TRUE;
 
+    @Builder.Default
     @NotNull
     private boolean accountNonLocked = Boolean.TRUE;
 
+    @Builder.Default
     @NotNull
     private boolean credentialsNonExpired = Boolean.TRUE;
 
+    @Builder.Default
     @NotNull
     private boolean enabled = Boolean.TRUE;
 
+    @Builder.Default
     @NotNull
     @ElementCollection
     @CollectionTable(name = "employee_authority")
