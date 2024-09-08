@@ -10,9 +10,20 @@ import java.util.Optional;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSpecificationExecutor<Document> {
 
+    /**
+     * Поиск одним запросом документа и загрузка всех подписей к нему.
+     * @param documentId ID документа
+     * @return найденный документ
+     */
     @EntityGraph(attributePaths = {"signatures"})
     Optional<Document> findWithSignaturesById(Long documentId);
 
+    /**
+     * Получение ID всех файлов, связанных с деревом документов: по одному файлу на каждый файл.
+     * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
+     *                       веток дерева
+     * @return список идентификаторов файлов
+     */
     @Query(value =
     """
     WITH RECURSIVE document_tree AS (
@@ -26,6 +37,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSp
     """, nativeQuery = true)
     List<Long> getTreeFileIds(Long rootDocumentId);
 
+    /**
+     * Окончить срок действия всех файлов, связанных с деревом документов.
+     * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
+     *                       веток дерева
+     */
     @Modifying(flushAutomatically = true)
     @Query(value =
     """
