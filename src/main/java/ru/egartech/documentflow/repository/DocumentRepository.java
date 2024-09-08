@@ -2,11 +2,13 @@ package ru.egartech.documentflow.repository;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.egartech.documentflow.entity.Document;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSpecificationExecutor<Document> {
 
@@ -42,6 +44,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSp
      * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
      *                       веток дерева
      */
+    @Transactional
     @Modifying(flushAutomatically = true)
     @Query(value =
     """

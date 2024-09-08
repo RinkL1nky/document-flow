@@ -10,6 +10,7 @@ import ru.egartech.documentflow.entity.FileMetadata;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional(readOnly = true)
 @Repository
 public interface FileMetadataRepository extends JpaRepository<FileMetadata, Long> {
 

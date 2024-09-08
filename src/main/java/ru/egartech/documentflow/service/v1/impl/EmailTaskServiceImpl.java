@@ -80,6 +80,7 @@ public class EmailTaskServiceImpl implements EmailTaskService {
         emailTaskMapper.updateEntity(detailsRequestDto, emailTask);
     }
 
+    @Transactional
     @Override
     public void deleteTaskDetails(Long taskId) {
         emailTaskRepository.deleteById(taskId);

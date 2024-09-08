@@ -67,6 +67,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
     }
 
     @CacheEvict("documentTypeResponse")
+    @Transactional
     @Override
     public void deleteDocumentType(Long documentTypeId) {
         documentTypeRepository.deleteById(documentTypeId);

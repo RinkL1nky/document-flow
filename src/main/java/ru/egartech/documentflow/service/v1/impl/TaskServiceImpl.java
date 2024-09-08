@@ -1,12 +1,12 @@
 package ru.egartech.documentflow.service.v1.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 import ru.egartech.documentflow.dto.v1.request.TaskChainItemRequestDto;
 import ru.egartech.documentflow.dto.v1.request.TaskPostRequestDto;
 import ru.egartech.documentflow.dto.v1.request.TaskPutRequestDto;
@@ -43,8 +43,9 @@ public class TaskServiceImpl implements TaskService {
     private final DocumentRepository documentRepository;
     private final EmployeeRepository employeeRepository;
     private final DocumentService documentService;
-    private final TransactionTemplate transactionTemplate;
     private final AuthenticationFacade authenticationFacade;
+    @Lazy
+    private final TaskService taskService;
 
     @Transactional(readOnly = true)
     @Override
@@ -107,7 +108,7 @@ public class TaskServiceImpl implements TaskService {
         if(taskRequestDto.getParentId() != null) {
             task.setParent(taskRepository.getReferenceById(taskRequestDto.getParentId()));
         }
-        Task savedTask = taskRepository.saveAndFlush(task);
+        Task savedTask = taskRepository.save(task);
 
         // associate child task with the new task
         rootChildTaskWrapper.ifPresent(oldRootChildTask -> oldRootChildTask.setParent(savedTask));
@@ -149,7 +150,7 @@ public class TaskServiceImpl implements TaskService {
                 task.setParent(newTasks.get(i - 1));
             }
         }
-        final List<Task> savedTaskChain = taskRepository.saveAllAndFlush(newTasks);
+        final List<Task> savedTaskChain = taskRepository.saveAll(newTasks);
 
         childTaskWrapper.ifPresent(oldRootChildTask -> oldRootChildTask
                 .setParent(taskRepository.getReferenceById(savedTaskChain.getLast().getId()))
@@ -253,7 +254,7 @@ public class TaskServiceImpl implements TaskService {
         validateTaskCompleting(task, Task.Type.SIGN);
         task.getDocument().getSignatures().add(new DocumentSignature(task.getAppointee()));
 
-        transactionTemplate.executeWithoutResult(result -> makeTaskCompleted(taskId));
+        taskService.makeTaskCompleted(taskId);
     }
 
     @Override
@@ -263,7 +264,7 @@ public class TaskServiceImpl implements TaskService {
         validateTaskCompleting(task, Task.Type.EDIT);
         documentService.updateDocumentFile(task.getDocument().getFile().getId(), fileId);
 
-        transactionTemplate.executeWithoutResult(result -> makeTaskCompleted(taskId));
+        taskService.makeTaskCompleted(taskId);
     }
 
     @Transactional
@@ -276,7 +277,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new NotFoundException("childDocumentId"));
         childDocument.setParent(task.getDocument());
 
-        transactionTemplate.executeWithoutResult(result -> makeTaskCompleted(taskId));
+        taskService.makeTaskCompleted(taskId);
     }
 
     @Transactional
@@ -289,7 +290,7 @@ public class TaskServiceImpl implements TaskService {
             throw new SubsidiaryTasksNotCompletedException();
         }
 
-        transactionTemplate.executeWithoutResult(result -> makeTaskCompleted(taskId));
+        taskService.makeTaskCompleted(taskId);
     }
 
     @Transactional

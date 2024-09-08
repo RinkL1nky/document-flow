@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.egartech.documentflow.entity.Task;
 
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
 
@@ -34,6 +36,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
      * @param parentId ID задачи-предка, по которому необходимо найти задачу-потомка
      * @param newParentId ID новой задачи-предка, на которую необходимо переопределить задачу-потомка
      */
+    @Transactional
     @Modifying(flushAutomatically = true)
     @Query("UPDATE Task t SET t.parent.id = :newParentId " +
             "WHERE t.document.id = :documentId " +
@@ -45,6 +48,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
      * @param taskId ID задачи
      * @param newStatus новый статус
      */
+    @Transactional
     @Modifying(flushAutomatically = true)
     @Query("UPDATE Task t SET t.status = :newStatus WHERE t.id = :taskId")
     void updateTaskStatus(Long taskId, Task.Status newStatus);
@@ -54,6 +58,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
      * @param parentId ID задачи-предка, по которому необходимо найти задачу-потомка
      * @param newStatus новый статус для задачи-потомка
      */
+    @Transactional
     @Modifying(flushAutomatically = true)
     @Query("UPDATE Task t SET t.status = :newStatus WHERE t.parent.id = :parentId")
     void updateChildTaskStatus(Long parentId, Task.Status newStatus);
@@ -87,6 +92,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
      * Если нет ни одного выполненного задания, станет активным первое в цепочке задание.
      * @param documentId ID документа, цепочку заданий для которого необходимо активировать
      */
+    @Transactional
     @Modifying
     @Query("UPDATE Task child SET child.status = 'IN_PROGRESS' " +
             "WHERE child.id IN (" +
