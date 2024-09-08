@@ -6,7 +6,7 @@ import ru.egartech.documentflow.exception.ApplicationException;
 public class TaskChainIntegrityViolation extends ApplicationException {
 
     public TaskChainIntegrityViolation() {
-        super(HttpStatus.CONFLICT, "TASK_CHAIN_INTEGRITY_VIOLATION");
+        super(HttpStatus.CONFLICT, "TASK_CHAIN_INTEGRITY_VIOLATION", "Task chain integrity cannot be violated");
     }
 
 }

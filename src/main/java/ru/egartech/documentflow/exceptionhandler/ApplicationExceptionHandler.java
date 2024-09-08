@@ -2,6 +2,7 @@ package ru.egartech.documentflow.exceptionhandler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.ParsingUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,8 +23,12 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseWrapper<Void> handleApplicationException(ApplicationException exception) {
+        if(exception.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR) {
+            log.error("Unexpected error has occurred.", exception);
+        }
         ErrorDto errorDto = ErrorDto.builder()
                 .code(exception.getCode())
+                .message(exception.getMessage())
                 .details(exception.getErrorDetails())
                 .build();
         return ResponseWrapper.<Void>builder()
@@ -67,6 +72,7 @@ public class ApplicationExceptionHandler {
         log.error("Failed to send email message.", exception);
         ErrorDto errorDto = ErrorDto.builder()
                 .code(exception.getCode())
+                .message("Failed to send email message.")
                 .details(exception.getErrorDetails())
                 .build();
         return ResponseWrapper.<Void>builder()
@@ -78,7 +84,9 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(FileStorageException.class)
     public ResponseWrapper<Void> handleFileStorageException(FileStorageException exception) {
-        log.error("FileStorageException has occurred.", exception);
+        if(exception.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR) {
+            log.error("Unexpected error has occurred.", exception);
+        }
         ErrorDto errorDto = ErrorDto.builder()
                 .code(exception.getCode())
                 .details(exception.getErrorDetails())

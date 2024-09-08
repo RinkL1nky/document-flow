@@ -1,11 +1,11 @@
 package ru.egartech.documentflow.util;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.egartech.documentflow.entity.Employee;
-import ru.egartech.documentflow.exception.auth.AuthenticationCredentialsNotAvailableException;
 
 import java.util.Optional;
 
@@ -23,7 +23,8 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
 
     @Override
     public Employee getCurrentEmployee() {
-        return findCurrentEmployee().orElseThrow(AuthenticationCredentialsNotAvailableException::new);
+        return findCurrentEmployee().orElseThrow(() ->
+                new AuthenticationCredentialsNotFoundException("An authentication object was not found"));
     }
 
     @Override

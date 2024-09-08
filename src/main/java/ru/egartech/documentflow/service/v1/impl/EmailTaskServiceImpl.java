@@ -9,11 +9,11 @@ import ru.egartech.documentflow.dto.v1.response.EmailTaskResponseDto;
 import ru.egartech.documentflow.entity.EmailTask;
 import ru.egartech.documentflow.entity.Task;
 import ru.egartech.documentflow.exception.auth.ForbiddenException;
+import ru.egartech.documentflow.exception.email.MessageTemplateProcessorNotFound;
 import ru.egartech.documentflow.service.emailclient.EmailClient;
 import ru.egartech.documentflow.exception.email.EmailSendingException;
 import ru.egartech.documentflow.exception.email.MessageTemplateNotFoundException;
 import ru.egartech.documentflow.service.emailtemplateprocessor.MessageTemplateProcessor;
-import ru.egartech.documentflow.exception.ApplicationException;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.EmailTaskRepository;
 import ru.egartech.documentflow.repository.TaskRepository;
@@ -94,7 +94,7 @@ public class EmailTaskServiceImpl implements EmailTaskService {
         MessageTemplateProcessor messageTemplateProcessor =
                 messageTemplateProcessorMap.get(emailTask.getTemplateName() + "TemplateProcessor");
         if(messageTemplateProcessor == null) {
-            throw new ApplicationException();
+            throw new MessageTemplateProcessorNotFound(emailTask.getTemplateName());
         }
 
         try {

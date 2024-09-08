@@ -6,8 +6,8 @@ import ru.egartech.documentflow.exceptionhandler.ErrorDetails;
 
 public class FileStorageException extends ApplicationException {
 
-    public FileStorageException(HttpStatus status, String code, ErrorDetails details) {
-        super(status, code, details);
+    public FileStorageException(HttpStatus status, String code, String message, ErrorDetails details) {
+        super(status, code, message, details);
     }
 
     public FileStorageException(Throwable exception) {

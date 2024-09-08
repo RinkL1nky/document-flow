@@ -6,7 +6,7 @@ import ru.egartech.documentflow.exception.ApplicationException;
 public class WrongTaskStatusException extends ApplicationException {
 
     public WrongTaskStatusException() {
-        super(HttpStatus.CONFLICT, "WRONG_TASK_STATUS");
+        super(HttpStatus.CONFLICT, "WRONG_TASK_STATUS", "Action cannot be processed due to task status");
     }
 
 }

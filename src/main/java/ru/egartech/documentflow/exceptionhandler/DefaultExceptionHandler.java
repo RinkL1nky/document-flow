@@ -3,6 +3,7 @@ package ru.egartech.documentflow.exceptionhandler;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -37,6 +38,19 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 .errors(errorDtoList)
                 .build();
         return new ResponseEntity<>(responseWrapper, new HttpHeaders(), 200);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseWrapper<Void> handleAccessDeniedException(AccessDeniedException exception) {
+        ErrorDto errorDto = ErrorDto.builder()
+                .code("FORBIDDEN")
+                .message(exception.getMessage())
+                .build();
+        return ResponseWrapper.<Void>builder()
+                .success(false)
+                .status(403)
+                .errors(List.of(errorDto))
+                .build();
     }
 
     @ExceptionHandler(Exception.class)

@@ -6,7 +6,7 @@ import ru.egartech.documentflow.exception.ApplicationException;
 public class WrongTaskTypeException extends ApplicationException {
 
     public WrongTaskTypeException() {
-        super(HttpStatus.CONFLICT, "WRONG_TASK_TYPE");
+        super(HttpStatus.CONFLICT, "WRONG_TASK_TYPE", "Action cannot be be processed due to task type");
     }
 
 }
