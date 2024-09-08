@@ -50,6 +50,11 @@ spring:
       pageable:
         max-page-size: 50
 
+springdoc:
+  swagger-ui:
+    path: /
+    url: /open-api-v1.json
+
 logging:
   level:
     org:
