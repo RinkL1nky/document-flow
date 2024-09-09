@@ -21,6 +21,14 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSp
     Optional<Document> findWithSignaturesById(Long documentId);
 
     /**
+     * Поиск одним запросом документа и загрузка мета-данных его файла.
+     * @param documentId ID документа
+     * @return найденный документ
+     */
+    @EntityGraph(attributePaths = {"file"})
+    Optional<Document> findWithFileById(Long documentId);
+
+    /**
      * Получение ID всех файлов, связанных с деревом документов: по одному файлу на каждый файл.
      * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
      *                       веток дерева

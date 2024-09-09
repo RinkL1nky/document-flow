@@ -262,7 +262,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NotFoundException("taskId"));
         validateTaskCompleting(task, Task.Type.EDIT);
-        documentService.updateDocumentFile(task.getDocument().getFile().getId(), fileId);
+        documentService.updateDocumentFile(task.getDocument().getId(), fileId);
 
         taskService.makeTaskCompleted(taskId);
     }
