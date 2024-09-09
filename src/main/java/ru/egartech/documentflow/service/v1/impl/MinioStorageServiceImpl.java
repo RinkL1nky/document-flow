@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import io.minio.*;
 import io.minio.http.Method;
@@ -23,6 +23,7 @@ import ru.egartech.documentflow.exception.file.FileStorageException;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.properties.S3Properties;
 import ru.egartech.documentflow.repository.FileMetadataRepository;
+import ru.egartech.documentflow.service.v1.SimpleStorageService;
 import ru.egartech.documentflow.util.AuthenticationFacade;
 
 import java.io.InputStream;

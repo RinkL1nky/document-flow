@@ -2,17 +2,38 @@ package ru.egartech.documentflow.repository;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.egartech.documentflow.entity.Document;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSpecificationExecutor<Document> {
 
+    /**
+     * Поиск одним запросом документа и загрузка всех подписей к нему.
+     * @param documentId ID документа
+     * @return найденный документ
+     */
     @EntityGraph(attributePaths = {"signatures"})
     Optional<Document> findWithSignaturesById(Long documentId);
 
+    /**
+     * Поиск одним запросом документа и загрузка мета-данных его файла.
+     * @param documentId ID документа
+     * @return найденный документ
+     */
+    @EntityGraph(attributePaths = {"file"})
+    Optional<Document> findWithFileById(Long documentId);
+
+    /**
+     * Получение ID всех файлов, связанных с деревом документов: по одному файлу на каждый файл.
+     * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
+     *                       веток дерева
+     * @return список идентификаторов файлов
+     */
     @Query(value =
     """
     WITH RECURSIVE document_tree AS (
@@ -26,6 +47,12 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSp
     """, nativeQuery = true)
     List<Long> getTreeFileIds(Long rootDocumentId);
 
+    /**
+     * Окончить срок действия всех файлов, связанных с деревом документов.
+     * @param rootDocumentId корневой документ, с которого начать рекурсивный обход всех
+     *                       веток дерева
+     */
+    @Transactional
     @Modifying(flushAutomatically = true)
     @Query(value =
     """

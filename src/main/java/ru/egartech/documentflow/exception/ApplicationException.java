@@ -9,13 +9,7 @@ public class ApplicationException extends RuntimeException {
 
     private final HttpStatus status;
     private final String code;
-    private final ErrorDetails errorDetails;
-
-    public ApplicationException(HttpStatus status, String code, ErrorDetails errorDetails) {
-        this.status = status;
-        this.code = code;
-        this.errorDetails = errorDetails;
-    }
+    private final transient ErrorDetails errorDetails;
 
     public ApplicationException(HttpStatus status, String code, String message, ErrorDetails errorDetails) {
         super(message);
@@ -24,7 +18,8 @@ public class ApplicationException extends RuntimeException {
         this.errorDetails = errorDetails;
     }
 
-    public ApplicationException(HttpStatus status, String code) {
+    public ApplicationException(HttpStatus status, String code, String message) {
+        super(message);
         this.status = status;
         this.code = code;
         this.errorDetails = null;
@@ -37,7 +32,8 @@ public class ApplicationException extends RuntimeException {
         this.errorDetails = null;
     }
 
-    public ApplicationException() {
+    public ApplicationException(String message) {
+        super(message);
         this.status = HttpStatus.INTERNAL_SERVER_ERROR;
         this.code = "UNEXPECTED_ERROR";
         this.errorDetails = null;

@@ -1,0 +1,2294 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "DocumentFlow API Definition",
+        "version": "v1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8086/api/v1",
+            "description": "Developer API Version 1"
+        }
+    ],
+    "paths": {
+
+        "/employees/employee/{employeeId}": {
+            "get": {
+                "tags": [
+                    "Сотрудники"
+                ],
+                "summary": "Получить профиль сотрудника по его идентификатору",
+                "operationId": "getEmployee",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/EmployeeResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Сотрудники"
+                ],
+                "summary": "Обновить данные аккаунта сотрудника",
+                "operationId": "updateEmployee",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Сотрудники"
+                ],
+                "summary": "Удалить аккаунт сотрудника",
+                "operationId": "deleteEmployee",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employees": {
+            "get": {
+                "tags": [
+                    "Сотрудники"
+                ],
+                "summary": "Найти все профили сотрудников согласно выбранным фильтрам и пагинации",
+                "operationId": "getEmployeePage",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "Фильтр по имени пользователя (логину)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "Фильтр по имени",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "Фильтр по фамилии",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageablePage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSize"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSort"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/components/schemas/PageWrapper"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "items": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "$ref": "#/components/schemas/EmployeeResponseDto"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/tasks/task": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Добавить новую задачу в базу данных",
+                "description": "При существовании цепочки задач для указанного документа, задача должна быть встроена в существующую последовательность задач и получить задачу-предка и задачу-потомка.",
+                "operationId": "createTask",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskPostRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/TaskResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}": {
+            "get": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Получить задачу по её идентификатору",
+                "operationId": "getTask",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/TaskResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Обновить данные задачи",
+                "description": "Также позволяет переместить задачу на другую позицию в цепочке задач для документа, но не позволяет переместить задачу в цепочку задач другого документа.",
+                "operationId": "updateTask",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TaskPutRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Удалить задачу",
+                "operationId": "deleteTask",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "get": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Получить все задачи согласно выбранным фильтрам и пагинации",
+                "operationId": "getTaskPage",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Фильтр по названию",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "comment",
+                        "in": "query",
+                        "description": "Фильтр по комментарию",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "document_id",
+                        "in": "query",
+                        "description": "Фильтр по документу",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "from_deadline",
+                        "in": "query",
+                        "description": "Фильтр по \"Крайний срок после\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "1970-01-01T00:00:00"
+                        }
+                    },
+                    {
+                        "name": "to_deadline",
+                        "in": "query",
+                        "description": "Фильтр по \"Крайний срок до\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2030-01-01T00:00:00"
+                        }
+                    },
+                    {
+                        "name": "appointee_id",
+                        "in": "query",
+                        "description": "Фильтр по назначенному сотруднику",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Фильтр по типу",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "SIGN",
+                                "EDIT",
+                                "ISSUE_NEW_DOCUMENT",
+                                "CONFIRM_SUBSIDIARY_TASKS_COMPLETION",
+                                "CONFIRM_EMAIL_SENDING"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Фильтр по состоянию",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "WAITING",
+                                "IN_PROGRESS",
+                                "COMPLETED",
+                                "REJECTED"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "issuer_id",
+                        "in": "query",
+                        "description": "Фильтр по создателю",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "from_created_at",
+                        "in": "query",
+                        "description": "Фильтр по \"Создано после\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "1970-01-01T00:00:00Z"
+                        }
+                    },
+                    {
+                        "name": "to_created_at",
+                        "in": "query",
+                        "description": "Фильтр по \"Создано до\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2030-01-01T00:00:00Z"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageablePage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSize"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSort"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/components/schemas/PageWrapper"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "items": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "$ref": "#/components/schemas/TaskResponseDto"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Создать новую цепочку задач и встроить её в существующую (при её наличии)",
+                "description": "Каждая задача в созданной цепочке становится предком для задачи, идущей следующей.",
+                "operationId": "createTaskChain",
+                "parameters": [
+                    {
+                        "name": "document_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "root_parent_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TaskChainItemRequestDto"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TaskResponseDto"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/activate-chain": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Запустить выполнение цепочки задач для документа",
+                "description": "Если в цепочке нет активного задания, станет активным следующее задание после последнего выполненного. Если нет ни одного выполненного задания, станет активным первое в цепочке задание. Если уже существует активное задание, никаких изменений совершено не будет. Таким образом, операция является идемпотентной.",
+                "operationId": "activateTaskChain",
+                "parameters": [
+                    {
+                        "name": "document_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}/reject": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Отклонить выполнение задачи",
+                "description": "Задача станет доступна к редактированию сотруднику, выпустившему её.",
+                "operationId": "rejectTask",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}/complete/sign-document": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Добавить к документу подпись и выполнить соответствующую задачу",
+                "operationId": "signDocument",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}/complete/link-document": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Прикрепить выпущенный дочерний документ к документу в задаче и, соответственно, её выполнить",
+                "operationId": "linkDocument",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "child_document_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}/complete/edit-document": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Редактировать файл документа (применить файл-черновик с изменениями) и выполнить соответствующую задачу",
+                "operationId": "editDocument",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/task/{taskId}/complete/confirm-subsidiary-tasks-completion": {
+            "post": {
+                "tags": [
+                    "Задачи"
+                ],
+                "summary": "Подтвердить готовность выпущенных дочерних документов и выполнить соответствующую задачу",
+                "operationId": "confirmSubsidiaryTasksCompletion",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/files/file/{fileId}": {
+            "get": {
+                "tags": [
+                    "Файлы"
+                ],
+                "summary": "Получить URL для скачивания указанного файла",
+                "operationId": "getFile",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/FileDownloadResponse"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Файлы"
+                ],
+                "summary": "Обновить мета-данные для указанного файла",
+                "description": "Изменённые мета-данные отразятся на формировании URL для скачивания или загрузки на сервер.",
+                "operationId": "updateFileMetadata",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FileMetadataRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/files/file/draft": {
+            "post": {
+                "tags": [
+                    "Файлы"
+                ],
+                "summary": "Сформировать данные для загрузки временного файла (черновика) на сервер",
+                "operationId": "createDraft",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FileDraftRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/FileUploadResponse"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/documents/document": {
+            "post": {
+                "tags": [
+                    "Документы"
+                ],
+                "summary": "Добавить документ в базу данных",
+                "operationId": "createDocument",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DocumentPostRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/DocumentResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents/document/{id}": {
+            "get": {
+                "tags": [
+                    "Документы"
+                ],
+                "summary": "Получение документа по его идентификатору",
+                "operationId": "getDocument",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/DocumentResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Документы"
+                ],
+                "summary": "Обновить данные документа (за исключением файла)",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "documentInfo",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/DocumentPutRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Документы"
+                ],
+                "summary": "Удалить документ и все его дочерние документы (корень и его дерево)",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/documents": {
+            "get": {
+                "tags": [
+                    "Документы"
+                ],
+                "summary": "Найти все документы согласно выбранным фильтрам и пагинации",
+                "operationId": "getDocumentPage",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Фильтр по названию",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "comment",
+                        "in": "query",
+                        "description": "Фильтр по комментарию",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type_id",
+                        "in": "query",
+                        "description": "Фильтр по типу документа",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "issuer_id",
+                        "in": "query",
+                        "description": "Фильтр по создателю",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "after_created_at",
+                        "in": "query",
+                        "description": "Фильтр по \"Создано после\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "1970-01-01T00:00:00Z"
+                        }
+                    },
+                    {
+                        "name": "before_created_at",
+                        "in": "query",
+                        "description": "Фильтр по \"Создано до\"",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2030-01-01T00:00:00Z"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageablePage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSize"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSort"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/components/schemas/PageWrapper"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "items": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "$ref": "#/components/schemas/DocumentResponseDto"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/document-types/document-type": {
+            "post": {
+                "tags": [
+                    "Типы документов"
+                ],
+                "summary": "Добавить тип документа в базу данных",
+                "operationId": "createDocumentType",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DocumentTypeRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/document-types/document-type/{documentTypeId}": {
+            "get": {
+                "tags": [
+                    "Типы документов"
+                ],
+                "summary": "Получить тип документа по его идентификатору",
+                "operationId": "getDocumentType",
+                "parameters": [
+                    {
+                        "name": "documentTypeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Типы документов"
+                ],
+                "summary": "Обновить данные типа документа",
+                "operationId": "updateDocumentType",
+                "parameters": [
+                    {
+                        "name": "documentTypeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DocumentTypeRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Типы документов"
+                ],
+                "summary": "Удалить тип документа",
+                "operationId": "deleteDocumentType",
+                "parameters": [
+                    {
+                        "name": "documentTypeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/document-types": {
+            "get": {
+                "tags": [
+                    "Типы документов"
+                ],
+                "summary": "Найти все типы документов согласно выбранным фильтрам и пагинации",
+                "operationId": "getDocumentTypePage",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Фильтр по названию"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageablePage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSize"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PageableSort"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/components/schemas/PageWrapper"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "items": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "$ref": "#/components/schemas/DocumentTypeResponseDto"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/email-tasks/email-task/{taskId}": {
+            "get": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Получить детали отправки электронной почты для соответствующей задачи",
+                "operationId": "getTaskDetails",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Обновить детали отправки электронной почты для соответствующей задачи",
+                "operationId": "updateTaskDetails",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailTaskRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Добавить детали отправки электронной почты для соответствующей задачи в базу данных",
+                "operationId": "createTaskDetails",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailTaskRequestDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Удалить детали отправки электронной почты для соответствующей задачи",
+                "operationId": "deleteTaskDetails",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/email-tasks/email-task/{taskId}/send-email": {
+            "post": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Отправка письма по электронной почте согласно указанной задаче",
+                "description": "В случае успеха, задача получит статус Выполненной.",
+                "operationId": "sendEmail",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/email-tasks/message-templates": {
+            "get": {
+                "tags": [
+                    "Детали задач для отправки электронной почты"
+                ],
+                "summary": "Получить доступные шаблоны для подготовки отправки письма",
+                "operationId": "getSupportedMessageTemplates",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "body": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+
+    "components": {
+
+        "parameters": {
+            "PageablePage": {
+                "name": "page",
+                "in": "query",
+                "description": "Страница результатов",
+                "schema": {
+                    "minimum": 0,
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "PageableSize": {
+                "name": "size",
+                "in": "query",
+                "description": "Количество результатов на странице",
+                "schema": {
+                    "minimum": 1,
+                    "maximum": 50,
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "PageableSort": {
+                "name": "sort",
+                "in": "query",
+                "style": "form",
+                "explode": false,
+                "description": "Сортировка результатов",
+                "example": ["id", "asc"],
+                "schema": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                }
+            }
+        },
+
+        "schemas": {
+
+            "DocumentPostRequestDto": {
+                "required": [
+                    "comment",
+                    "file_id",
+                    "name",
+                    "type_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "maxLength": 2048,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "type_id": {
+                        "maximum": 32767,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "file_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "DocumentPutRequestDto": {
+                "required": [
+                    "comment",
+                    "name",
+                    "type_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "maxLength": 2048,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "type_id": {
+                        "maximum": 32767,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "DocumentTypeRequestDto": {
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    }
+                }
+            },
+            "TaskPostRequestDto": {
+                "required": [
+                    "appointee_id",
+                    "comment",
+                    "deadline",
+                    "document_id",
+                    "name",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2030-01-01T00:00:00"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SIGN",
+                            "EDIT",
+                            "ISSUE_NEW_DOCUMENT",
+                            "CONFIRM_SUBSIDIARY_TASKS_COMPLETION",
+                            "CONFIRM_EMAIL_SENDING"
+                        ]
+                    },
+                    "document_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "appointee_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "TaskPutRequestDto": {
+                "required": [
+                    "appointee_id",
+                    "comment",
+                    "deadline",
+                    "name",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2030-01-01T00:00:00"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SIGN",
+                            "EDIT",
+                            "ISSUE_NEW_DOCUMENT",
+                            "CONFIRM_SUBSIDIARY_TASKS_COMPLETION",
+                            "CONFIRM_EMAIL_SENDING"
+                        ]
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "appointee_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "TaskChainItemRequestDto": {
+                "required": [
+                    "appointee_id",
+                    "comment",
+                    "deadline",
+                    "name",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "comment": {
+                        "maxLength": 128,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2030-01-01T00:00:00"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SIGN",
+                            "EDIT",
+                            "ISSUE_NEW_DOCUMENT",
+                            "CONFIRM_SUBSIDIARY_TASKS_COMPLETION",
+                            "CONFIRM_EMAIL_SENDING"
+                        ]
+                    },
+                    "appointee_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "EmailTaskRequestDto": {
+                "required": [
+                    "destination_email",
+                    "subject",
+                    "template_name"
+                ],
+                "type": "object",
+                "properties": {
+                    "subject": {
+                        "type": "string"
+                    },
+                    "destination_email": {
+                        "type": "string"
+                    },
+                    "template_name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "FileMetadataRequestDto": {
+                "required": [
+                    "content_type",
+                    "filename"
+                ],
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "maxLength": 255,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "content_type": {
+                        "maxLength": 255,
+                        "minLength": 4,
+                        "type": "string"
+                    }
+                }
+            },
+            "FileDraftRequest": {
+                "required": [
+                    "content_type",
+                    "filename"
+                ],
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "maxLength": 255,
+                        "minLength": 4,
+                        "type": "string"
+                    },
+                    "content_type": {
+                        "maxLength": 255,
+                        "minLength": 4,
+                        "type": "string"
+                    }
+                }
+            },
+            "EmployeeRequestDto": {
+                "required": [
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "password",
+                    "username"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "maxLength": 32,
+                        "minLength": 3,
+                        "type": "string"
+                    },
+                    "password": {
+                        "maxLength": 255,
+                        "minLength": 8,
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "maxLength": 32,
+                        "minLength": 3,
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "maxLength": 32,
+                        "minLength": 3,
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            },
+            
+
+
+            "PageWrapper": {
+                "type": "object",
+                "properties": {
+                    "total_pages": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "total_items": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "item_count": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "SuccessResponseWrapper": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "errors": {
+                        "type": "array",
+                        "example": []
+                    }
+                }
+            },
+            "EmptyResponseWrapper": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 204
+                    },
+                    "errors": {
+                        "type": "array",
+                        "example": []
+                    }
+                }
+            },
+
+
+
+            "EmployeeResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "authorities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "DocumentResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "type_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "file_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "signatory_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    "issuer_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "1970-01-01T00:00:00Z"
+                    }
+                }
+            },
+            "DocumentTypeResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TaskResponseDto": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "document_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "deadline": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2030-01-01T00:00:00"
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "appointee_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "SIGN",
+                            "EDIT",
+                            "ISSUE_NEW_DOCUMENT",
+                            "CONFIRM_SUBSIDIARY_TASKS_COMPLETION",
+                            "CONFIRM_EMAIL_SENDING"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "WAITING",
+                            "IN_PROGRESS",
+                            "COMPLETED",
+                            "REJECTED"
+                        ]
+                    },
+                    "issuer_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "1970-01-01T00:00:00Z"
+                    }
+                }
+            },
+            "FileUploadResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "upload_url": {
+                        "type": "string"
+                    },
+                    "form_data": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "FileDownloadResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "download_url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "EmailTaskResponseDto": {
+                "required": [
+                    "destination_email",
+                    "subject",
+                    "task_id",
+                    "template_name"
+                ],
+                "type": "object",
+                "properties": {
+                    "task_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "destination_email": {
+                        "type": "string"
+                    },
+                    "template_name": {
+                        "type": "string"
+                    },
+                    "subject": {
+                        "type": "string"
+                    }
+                }
+            }
+
+        }
+    }
+}

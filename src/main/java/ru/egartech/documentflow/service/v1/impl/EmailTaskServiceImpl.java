@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.service.v1;
+package ru.egartech.documentflow.service.v1.impl;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +9,16 @@ import ru.egartech.documentflow.dto.v1.response.EmailTaskResponseDto;
 import ru.egartech.documentflow.entity.EmailTask;
 import ru.egartech.documentflow.entity.Task;
 import ru.egartech.documentflow.exception.auth.ForbiddenException;
+import ru.egartech.documentflow.exception.email.MessageTemplateProcessorNotFound;
 import ru.egartech.documentflow.service.emailclient.EmailClient;
 import ru.egartech.documentflow.exception.email.EmailSendingException;
 import ru.egartech.documentflow.exception.email.MessageTemplateNotFoundException;
 import ru.egartech.documentflow.service.emailtemplateprocessor.MessageTemplateProcessor;
-import ru.egartech.documentflow.exception.ApplicationException;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.EmailTaskRepository;
 import ru.egartech.documentflow.repository.TaskRepository;
+import ru.egartech.documentflow.service.v1.EmailTaskService;
+import ru.egartech.documentflow.service.v1.TaskService;
 import ru.egartech.documentflow.service.v1.mapper.EmailTaskMapper;
 import ru.egartech.documentflow.util.AuthenticationFacade;
 
@@ -78,6 +80,7 @@ public class EmailTaskServiceImpl implements EmailTaskService {
         emailTaskMapper.updateEntity(detailsRequestDto, emailTask);
     }
 
+    @Transactional
     @Override
     public void deleteTaskDetails(Long taskId) {
         emailTaskRepository.deleteById(taskId);
@@ -92,7 +95,7 @@ public class EmailTaskServiceImpl implements EmailTaskService {
         MessageTemplateProcessor messageTemplateProcessor =
                 messageTemplateProcessorMap.get(emailTask.getTemplateName() + "TemplateProcessor");
         if(messageTemplateProcessor == null) {
-            throw new ApplicationException();
+            throw new MessageTemplateProcessorNotFound(emailTask.getTemplateName());
         }
 
         try {

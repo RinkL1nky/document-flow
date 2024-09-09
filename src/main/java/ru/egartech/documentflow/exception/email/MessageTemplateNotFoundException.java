@@ -7,9 +7,10 @@ import ru.egartech.documentflow.exceptionhandler.ErrorDetails;
 public class MessageTemplateNotFoundException extends ApplicationException {
 
     public MessageTemplateNotFoundException() {
-        super(HttpStatus.CONFLICT, "MESSAGE_TEMPLATE_NOT_FOUND", ErrorDetails.builder()
-                .field("templateName")
-                .build());
+        super(HttpStatus.CONFLICT, "MESSAGE_TEMPLATE_NOT_FOUND", "Message template was not found",
+                ErrorDetails.builder()
+                        .field("templateName")
+                        .build());
     }
 
 }

@@ -1,0 +1,36 @@
+server:
+  address: 127.0.0.1
+  port: 8086
+  ssl:
+    enabled: false
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/documents?reWriteBatchedInserts=true
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+s3:
+  endpoint: http://127.0.0.1:9000
+  access-key: ${S3_ACCESS_KEY}
+  secret-key: ${S3_SECRET_KEY}
+  common-bucket: documentflow
+  draft-bucket: documentflow-temp
+  min-content-length: 0
+  max-content-length: 1048576
+  draft-expiration-days: 1
+  upload-expiration-minutes: 720
+  download-expiration-minutes: 720
+
+email-client:
+  sender-address: ${EMAIL_SENDER_ADDRESS}

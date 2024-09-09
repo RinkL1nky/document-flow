@@ -3,14 +3,18 @@ package ru.egartech.documentflow.service.emailclient;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ru.egartech.documentflow.properties.EmailClientProperties;
 
+@Profile("dev")
+@Slf4j
 @RequiredArgsConstructor
 @Service
-public class EmailClientImpl implements EmailClient {
+public class DeveloperEmailClient implements EmailClient {
 
     private final JavaMailSender emailSender;
     private final EmailClientProperties emailClientProperties;
@@ -29,7 +33,7 @@ public class EmailClientImpl implements EmailClient {
             messageHelper.addAttachment(entry.getKey(), entry.getValue());
         }
 
-        emailSender.send(message);
+        log.info("Email message actually was not sent due to enabled developer profile");
     }
 
 }

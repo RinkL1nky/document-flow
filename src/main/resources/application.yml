@@ -1,19 +1,10 @@
-server:
-  address: 127.0.0.1
-  port: 8086
-  ssl:
-    enabled: false
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/documents?reWriteBatchedInserts=true
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
     hikari:
       auto-commit: false
   jpa:
     properties:
       hibernate:
-        format_sql: true
         order_inserts: true
         order_updates: true
         jdbc:
@@ -24,50 +15,21 @@ spring:
     database: POSTGRESQL
     hibernate:
       ddl-auto: validate
-    show-sql: true
     open-in-view: false
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
   jackson:
     property-naming-strategy: SNAKE_CASE
-  mail:
-    host: smtp.yandex.ru
-    port: 587
-    username: ${EMAIL_USER}
-    password: ${EMAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-  docker:
-    compose:
-      enabled: true
   data:
     web:
       pageable:
         max-page-size: 50
+  docker:
+    compose:
+      enabled: false
 
-logging:
-  level:
-    org:
-      springframework:
-        transaction:
-          interceptor: TRACE
-
-s3:
-  endpoint: http://127.0.0.1:9000
-  access-key: ${S3_ACCESS_KEY}
-  secret-key: ${S3_SECRET_KEY}
-  common-bucket: documentflow
-  draft-bucket: documentflow-temp
-  min-content-length: 0
-  max-content-length: 1048576
-  draft-expiration-days: 1
-  upload-expiration-minutes: 720
-  download-expiration-minutes: 720
-
-email-client:
-  sender-address: ${EMAIL_SENDER_ADDRESS}
+springdoc:
+  swagger-ui:
+    path: /
+    url: /open-api-v1.json

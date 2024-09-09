@@ -1,6 +1,5 @@
 package ru.egartech.documentflow.dto.v1.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +24,6 @@ public class TaskChainItemRequestDto {
     @Future
     private final LocalDateTime deadline;
 
-    @JsonProperty("appointee_id")
     @NotNull
     @Positive
     private final Long appointeeId;

@@ -6,7 +6,8 @@ import ru.egartech.documentflow.exception.ApplicationException;
 public class SubsidiaryTasksNotCompletedException extends ApplicationException {
 
     public SubsidiaryTasksNotCompletedException() {
-        super(HttpStatus.CONFLICT, "SUBSIDIARY_TASKS_NOT_COMPLETED");
+        super(HttpStatus.CONFLICT, "SUBSIDIARY_TASKS_NOT_COMPLETED",
+                "There are uncompleted tasks for subsidiary documents");
     }
 
 }

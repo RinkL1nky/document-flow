@@ -1,6 +1,5 @@
 package ru.egartech.documentflow.dto.v1.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +19,6 @@ public class DocumentPutRequestDto {
     @Positive
     @Max(32767)
     @NotNull
-    @JsonProperty("type_id")
     private final Long typeId;
 
 }
