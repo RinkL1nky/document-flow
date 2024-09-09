@@ -74,7 +74,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
     """
     WITH RECURSIVE document_tree AS (
         SELECT d.* FROM document d
-        WHERE d.id = :rootDocumentId
+        WHERE d.parent_id = :rootDocumentId
         UNION ALL
         SELECT d.* FROM document d
         JOIN document_tree ON d.parent_id = document_tree.id
