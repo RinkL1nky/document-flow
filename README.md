@@ -68,7 +68,7 @@ ID которого будет связано с документом и он у
 3. Должны быть заданы переменные окружения для Maven:
 `Build, Execution, Deployment` -> `Build Tools` -> `Maven` -> `Runner`
 
-![intellij-env](https://github.com/user-attachments/assets/40d284ec-588d-4e01-b3b1-874d0b1d3bed)
+![2024-09-09 01-28-38 Environment Variables](https://github.com/user-attachments/assets/e0f76677-4795-4477-b612-fa15ec3f2a58)
 
 4. Запускается программа как и любое другое Spring Boot приложение: командой `mvn spring-boot:run`
 5. Дождаться загрузки
@@ -91,4 +91,5 @@ ID которого будет связано с документом и он у
 * Minio - 9.4
 
 ==========================
+
 
