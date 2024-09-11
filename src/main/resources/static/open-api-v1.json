@@ -126,6 +126,55 @@
                 }
             }
         },
+        "/employees/employee/{employeeId}/authorities": {
+            "patch": {
+                "tags": [
+                    "Сотрудники"
+                ],
+                "summary": "Обновить список полномочий (ролей) у сотрудника",
+                "operationId": "updateEmployeeAuthorities",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "enum": [
+                                        "ROLE_USER",
+                                        "ROLE_ADMIN"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/employees": {
             "get": {
                 "tags": [

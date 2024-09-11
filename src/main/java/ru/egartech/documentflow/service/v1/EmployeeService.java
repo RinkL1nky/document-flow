@@ -7,6 +7,8 @@ import ru.egartech.documentflow.dto.v1.request.EmployeeSearchDto;
 import ru.egartech.documentflow.dto.v1.response.EmployeeResponseDto;
 import ru.egartech.documentflow.responsewrapper.PageWrapper;
 
+import java.util.List;
+
 public interface EmployeeService extends UserDetailsService {
 
     /**
@@ -39,6 +41,13 @@ public interface EmployeeService extends UserDetailsService {
      * @throws ru.egartech.documentflow.exception.NotFoundException если сотрудник не найден
      */
     void updateEmployee(Long employeeId, EmployeeRequestDto employeeRequestDto);
+
+    /**
+     * Обновить полномочия (роли) сотрудника.
+     * @param employeeId ID сотрудника
+     * @param employeeAuthorities новый список ролей
+     */
+    void updateEmployeeAuthorities(Long employeeId, List<String> employeeAuthorities);
 
     /**
      * Удалить аккаунт сотрудника.

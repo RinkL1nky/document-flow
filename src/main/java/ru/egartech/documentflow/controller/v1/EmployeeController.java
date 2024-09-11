@@ -13,6 +13,8 @@ import ru.egartech.documentflow.responsewrapper.PageWrapper;
 import ru.egartech.documentflow.responsewrapper.WrappedResponse;
 import ru.egartech.documentflow.service.v1.EmployeeService;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @WrappedResponse
 @RestController
@@ -35,6 +37,13 @@ public class EmployeeController {
     public void updateEmployee(@PathVariable @Positive Long employeeId,
                                @RequestBody @Valid EmployeeRequestDto employeeRequestDto) {
         employeeService.updateEmployee(employeeId, employeeRequestDto);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PatchMapping("/employee/{employeeId}/authorities")
+    public void updateEmployeeAuthorities(@PathVariable @Positive Long employeeId,
+                                          @RequestBody List<String> employeeAuthorities) {
+        employeeService.updateEmployeeAuthorities(employeeId, employeeAuthorities);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
