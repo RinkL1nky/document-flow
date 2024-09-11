@@ -102,12 +102,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void updateDocumentFile(Long documentId, Long fileId) {
+    public void updateDocumentFile(Long documentId, Long draftFileId) {
         Document document = documentRepository.findWithFileById(documentId)
                 .orElseThrow(() -> new NotFoundException("documentId"));
 
-        simpleStorageService.moveFile(fileId, document.getFile().getId());
-        simpleStorageService.setFileExpired(fileId);
+        simpleStorageService.applyDraft(draftFileId, document.getFile().getId());
+        simpleStorageService.setFileExpired(draftFileId);
     }
 
     @Transactional

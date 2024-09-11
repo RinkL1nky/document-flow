@@ -51,14 +51,36 @@ public interface SimpleStorageService {
     FileUploadResponse createDraft(FileDraftRequest draftRequestDto);
 
     /**
-     * Сохранить новый файл, имеющий бессрочный срок действия, используя содержание временного файла (черновика).
+     * Сохранить новый файл, имеющий бессрочный срок действия, используя содержимое временного файла (черновика).
      * @param draftFileId ID файла-черновика
      * @return мета-данные созданного файла
-     * @throws ru.egartech.documentflow.exception.NotFoundException если черновик не найден
-     * @throws ru.egartech.documentflow.exception.file.FileIsExpiredException если срок действия черновика истёк
-     * @see SimpleStorageService#moveFile(FileMetadata, FileMetadata) 
+     * @throws ru.egartech.documentflow.exception.NotFoundException если файл-черновик не найден
+     * @see SimpleStorageService#applyDraft(FileMetadata, FileMetadata)
      */
     FileMetadata applyDraft(Long draftFileId);
+
+    /**
+     * Применить файл-черновик и переместить его содержимое в целевой файл.
+     * @param draftFileId ID файла-черновика
+     * @param destinationFileId ID целевого файла
+     * @throws ru.egartech.documentflow.exception.NotFoundException если один из файлов не найден
+     * @see SimpleStorageService#applyDraft(FileMetadata, FileMetadata)
+     */
+    void applyDraft(Long draftFileId, Long destinationFileId);
+
+    /**
+     * Применить файл-черновик и переместить его содержимое в целевой файл.
+     * @param draftFile файл-черновик
+     * @param destinationFile целевой файл
+     * @throws ru.egartech.documentflow.exception.file.FileIsExpiredException если срок действия
+     * одного из файлов истёк
+     * @throws ru.egartech.documentflow.exception.auth.ForbiddenException если пользователь
+     * не владеет файлом-черновиком
+     * @throws ru.egartech.documentflow.exception.file.DraftFileIsRequiredException если файл-черновик
+     * не является черновиком
+     * @see SimpleStorageService#moveFile(FileMetadata, FileMetadata)
+     */
+    void applyDraft(FileMetadata draftFile, FileMetadata destinationFile);
 
     /**
      * Переместить содержимое одного файла в другую локацию согласно мета-данным.

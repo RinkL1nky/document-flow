@@ -46,10 +46,10 @@ public interface DocumentService {
     /**
      * Обновить содержимое файла у документа.
      * @param documentId ID документа
-     * @param fileId ID файла с новым содержанием
+     * @param draftFileId ID файла-черновика с новым содержимым
      * @see DocumentService#updateDocument(Long, DocumentPutRequestDto)
      */
-    void updateDocumentFile(Long documentId, Long fileId);
+    void updateDocumentFile(Long documentId, Long draftFileId);
 
     /**
      * Удалить документ и все его дочерние документы (корень и его дерево).
