@@ -54,7 +54,7 @@ public class MinioStorageServiceImpl implements SimpleStorageService {
         try {
             Map<String, String> extraParams = new HashMap<>();
             extraParams.put("response-content-type", fileMeta.getContentType());
-            extraParams.put("response-content-disposition", "attachment; name=" + fileMeta.getFilename());
+            extraParams.put("response-content-disposition", "attachment; filename=%s".formatted(fileMeta.getFilename()));
 
             String downloadUrl = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
