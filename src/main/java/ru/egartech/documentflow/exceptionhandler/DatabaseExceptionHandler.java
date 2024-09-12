@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.egartech.documentflow.responsewrapper.ResponseWrapper;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -21,13 +22,14 @@ public class DatabaseExceptionHandler {
 
     private final JpaProperties jpaProperties;
 
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseWrapper<Void> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        List<ErrorDto> errorDtoList = new ArrayList<>();
+    public ErrorDtoWrapper handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        List<ErrorDtoItem> errorDtoItemList = new ArrayList<>();
         if(exception.getCause() instanceof ConstraintViolationException constraintException) {
             Optional<ConstraintErrorCode> errorCode =
                     ConstraintErrorCode.findOne(constraintException.getSQLState(), jpaProperties.getDatabase());
-            errorCode.ifPresent(errorEnum -> errorDtoList.add(ErrorDto.builder()
+            errorCode.ifPresent(errorEnum -> errorDtoItemList.add(ErrorDtoItem.builder()
                     .code(errorEnum.getErrorCode())
                     .message(MessageFormat.format(errorEnum.getMessage(), constraintException.getConstraintName()))
                     .details(ErrorDetails.builder()
@@ -37,19 +39,16 @@ public class DatabaseExceptionHandler {
                     .build()
             ));
         }
-        if(errorDtoList.isEmpty()) {
+        if(errorDtoItemList.isEmpty()) {
             log.warn("Data cannot be committed to database:", exception);
-            errorDtoList.add(ErrorDto.builder()
+            errorDtoItemList.add(ErrorDtoItem.builder()
                     .code("DATABASE_INTEGRITY_VIOLATION")
                     .message("Incorrect data cannot be committed to database")
                     .build()
             );
         }
-        return ResponseWrapper.<Void>builder()
-                .success(false)
-                .status(409)
-                .errors(errorDtoList)
-                .build();
+
+        return new ErrorDtoWrapper(errorDtoItemList);
     }
 
 }

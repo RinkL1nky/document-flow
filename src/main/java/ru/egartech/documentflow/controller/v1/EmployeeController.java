@@ -4,19 +4,18 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.egartech.documentflow.dto.v1.request.EmployeeRequestDto;
 import ru.egartech.documentflow.dto.v1.request.EmployeeSearchDto;
 import ru.egartech.documentflow.dto.v1.response.EmployeeResponseDto;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
-import ru.egartech.documentflow.responsewrapper.WrappedResponse;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.service.v1.EmployeeService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@WrappedResponse
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
@@ -33,6 +32,7 @@ public class EmployeeController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') || #employeeId.equals(principal.id)")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/employee/{employeeId}")
     public void updateEmployee(@PathVariable @Positive Long employeeId,
                                @RequestBody @Valid EmployeeRequestDto employeeRequestDto) {
@@ -40,6 +40,7 @@ public class EmployeeController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/employee/{employeeId}/authorities")
     public void updateEmployeeAuthorities(@PathVariable @Positive Long employeeId,
                                           @RequestBody List<String> employeeAuthorities) {
@@ -47,6 +48,7 @@ public class EmployeeController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/employee/{employeeId}")
     public void deleteEmployee(@PathVariable @Positive Long employeeId) {
         employeeService.deleteEmployee(employeeId);

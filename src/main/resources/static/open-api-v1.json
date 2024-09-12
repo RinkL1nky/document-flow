@@ -31,24 +31,12 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/EmployeeResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/EmployeeResponseDto"
                                 }
                             }
                         }
@@ -83,15 +71,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT",
                     }
                 }
             },
@@ -113,15 +94,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT",
                     }
                 }
             }
@@ -162,15 +136,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT",
                     }
                 }
             }
@@ -225,28 +192,16 @@
                                 "schema": {
                                     "allOf": [
                                         {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                            "$ref": "#/components/schemas/PageWrapper"
                                         },
                                         {
                                             "type": "object",
                                             "properties": {
-                                                "body": {
-                                                    "allOf": [
-                                                        {
-                                                            "$ref": "#/components/schemas/PageWrapper"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "items": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/components/schemas/EmployeeResponseDto"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/EmployeeResponseDto"
+                                                    }
                                                 }
                                             }
                                         }
@@ -280,24 +235,12 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/TaskResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/TaskResponseDto"
                                 }
                             }
                         }
@@ -329,19 +272,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/TaskResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/TaskResponseDto"
                                 }
                             }
                         }
@@ -377,15 +308,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             },
@@ -407,15 +331,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -558,28 +475,16 @@
                                 "schema": {
                                     "allOf": [
                                         {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                            "$ref": "#/components/schemas/PageWrapper"
                                         },
                                         {
                                             "type": "object",
                                             "properties": {
-                                                "body": {
-                                                    "allOf": [
-                                                        {
-                                                            "$ref": "#/components/schemas/PageWrapper"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "items": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/components/schemas/TaskResponseDto"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TaskResponseDto"
+                                                    }
                                                 }
                                             }
                                         }
@@ -631,27 +536,15 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/components/schemas/TaskResponseDto"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TaskResponseDto"
+                                    }
                                 }
                             }
                         }
@@ -679,15 +572,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -712,15 +598,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -744,15 +623,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -785,15 +657,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -826,15 +691,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -858,15 +716,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -898,19 +749,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/FileDownloadResponse"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/FileDownloadResponse"
                                 }
                             }
                         }
@@ -946,15 +785,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -977,24 +809,12 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/FileUploadResponse"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/FileUploadResponse"
                                 }
                             }
                         }
@@ -1023,24 +843,12 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/DocumentResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/DocumentResponseDto"
                                 }
                             }
                         }
@@ -1072,19 +880,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/DocumentResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/DocumentResponseDto"
                                 }
                             }
                         }
@@ -1106,26 +902,21 @@
                             "type": "integer",
                             "format": "int64"
                         }
-                    },
-                    {
-                        "name": "documentInfo",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/components/schemas/DocumentPutRequestDto"
-                        }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DocumentPutRequestDto"
                             }
                         }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             },
@@ -1147,15 +938,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -1241,28 +1025,16 @@
                                 "schema": {
                                     "allOf": [
                                         {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                            "$ref": "#/components/schemas/PageWrapper"
                                         },
                                         {
                                             "type": "object",
                                             "properties": {
-                                                "body": {
-                                                    "allOf": [
-                                                        {
-                                                            "$ref": "#/components/schemas/PageWrapper"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "items": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/components/schemas/DocumentResponseDto"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/DocumentResponseDto"
+                                                    }
                                                 }
                                             }
                                         }
@@ -1295,24 +1067,12 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
                                 }
                             }
                         }
@@ -1344,19 +1104,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/DocumentTypeResponseDto"
                                 }
                             }
                         }
@@ -1391,15 +1139,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             },
@@ -1421,15 +1162,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -1466,28 +1200,16 @@
                                 "schema": {
                                     "allOf": [
                                         {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
+                                            "$ref": "#/components/schemas/PageWrapper"
                                         },
                                         {
                                             "type": "object",
                                             "properties": {
-                                                "body": {
-                                                    "allOf": [
-                                                        {
-                                                            "$ref": "#/components/schemas/PageWrapper"
-                                                        },
-                                                        {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "items": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "$ref": "#/components/schemas/DocumentTypeResponseDto"
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/DocumentTypeResponseDto"
+                                                    }
                                                 }
                                             }
                                         }
@@ -1526,19 +1248,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
                                 }
                             }
                         }
@@ -1573,15 +1283,8 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             },
@@ -1613,24 +1316,12 @@
                     "required": true
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "CREATED",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/EmailTaskResponseDto"
                                 }
                             }
                         }
@@ -1655,15 +1346,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -1688,15 +1372,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/EmptyResponseWrapper"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "NO CONTENT"
                     }
                 }
             }
@@ -1714,22 +1391,10 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#/components/schemas/SuccessResponseWrapper"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "properties": {
-                                                "body": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
@@ -2099,42 +1764,6 @@
                     "item_count": {
                         "type": "integer",
                         "format": "int32"
-                    }
-                }
-            },
-            "SuccessResponseWrapper": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": true
-                    },
-                    "status": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 200
-                    },
-                    "errors": {
-                        "type": "array",
-                        "example": []
-                    }
-                }
-            },
-            "EmptyResponseWrapper": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": true
-                    },
-                    "status": {
-                        "type": "integer",
-                        "format": "int32",
-                        "example": 204
-                    },
-                    "errors": {
-                        "type": "array",
-                        "example": []
                     }
                 }
             },

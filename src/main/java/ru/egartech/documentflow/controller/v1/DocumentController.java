@@ -4,17 +4,16 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.egartech.documentflow.dto.v1.request.DocumentPostRequestDto;
 import ru.egartech.documentflow.dto.v1.request.DocumentPutRequestDto;
 import ru.egartech.documentflow.dto.v1.request.DocumentSearchDto;
 import ru.egartech.documentflow.dto.v1.response.DocumentResponseDto;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
-import ru.egartech.documentflow.responsewrapper.WrappedResponse;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.service.v1.DocumentService;
 
-@WrappedResponse
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/documents")
@@ -31,17 +30,20 @@ public class DocumentController {
         return documentService.getDocumentPage(searchDto, pageable);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/document")
     public DocumentResponseDto createDocument(@RequestBody @Valid DocumentPostRequestDto documentInfo) {
         return documentService.createDocument(documentInfo);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/document/{id}")
     public void update(@PathVariable @Positive Long id,
-                       @Valid DocumentPutRequestDto documentInfo) {
+                       @RequestBody @Valid DocumentPutRequestDto documentInfo) {
         documentService.updateDocument(id, documentInfo);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/document/{id}")
     public void delete(@PathVariable @Positive Long id) {
