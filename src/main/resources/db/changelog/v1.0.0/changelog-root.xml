@@ -19,5 +19,6 @@
     <include file="008.add-column-expires-at-to-file-metadata.xml" relativeToChangelogFile="true"/>
     <include file="009.insert-initial-data-examples.xml" relativeToChangelogFile="true"/>
     <include file="010.add-consistency-checks.xml" relativeToChangelogFile="true"/>
+    <include file="011.add-unique-constraints.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

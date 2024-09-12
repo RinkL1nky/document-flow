@@ -83,7 +83,17 @@ public class EmailTaskServiceImpl implements EmailTaskService {
     @Transactional
     @Override
     public void deleteTaskDetails(Long taskId) {
-        emailTaskRepository.deleteById(taskId);
+        emailTaskRepository.findWithRootById(taskId)
+                .ifPresent(this::deleteTaskDetails);
+    }
+
+    @Transactional
+    @Override
+    public void deleteTaskDetails(EmailTask emailTask) {
+        if(!authenticationFacade.isCurrentEmployee(emailTask.getTask().getIssuer())) {
+            throw new ForbiddenException();
+        }
+        emailTaskRepository.delete(emailTask);
     }
 
     @Override

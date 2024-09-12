@@ -1,4 +1,4 @@
-package ru.egartech.documentflow.responsewrapper;
+package ru.egartech.documentflow.dto.v1.response;
 
 import lombok.Builder;
 import lombok.Data;

@@ -24,7 +24,7 @@ import ru.egartech.documentflow.exception.task.WrongTaskTypeException;
 import ru.egartech.documentflow.repository.DocumentRepository;
 import ru.egartech.documentflow.repository.EmployeeRepository;
 import ru.egartech.documentflow.repository.TaskRepository;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
 import ru.egartech.documentflow.service.v1.DocumentService;
 import ru.egartech.documentflow.service.v1.TaskService;
@@ -197,26 +197,20 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void deleteTask(Long taskId) {
-        Task deletedTask = taskRepository.findById(taskId).orElse(null);
-        if(deletedTask == null) {
-            return;
-        }
+        taskRepository.findById(taskId)
+                .ifPresent(this::deleteTask);
+    }
 
-        if(!authenticationFacade.isCurrentEmployee(deletedTask.getIssuer())) {
+    @Transactional
+    @Override
+    public void deleteTask(Task task) {
+        if(!authenticationFacade.isCurrentEmployee(task.getIssuer())) {
             throw new ForbiddenException();
         }
-        if(!List.of(Task.Status.WAITING, Task.Status.REJECTED).contains(deletedTask.getStatus())) {
-            throw new WrongTaskStatusException();
-        }
 
-        if(deletedTask.getParent() != null) {
-            taskRepository.rebaseTask(
-                    deletedTask.getDocument().getId(),
-                    deletedTask.getId(),
-                    deletedTask.getParent().getId()
-            );
-        }
-        taskRepository.deleteById(taskId);
+        Long taskParentId = task.getParent() != null ? task.getParent().getId() : null;
+        taskRepository.rebaseTask(task.getDocument().getId(), task.getId(), taskParentId);
+        taskRepository.delete(task);
     }
 
     @Transactional

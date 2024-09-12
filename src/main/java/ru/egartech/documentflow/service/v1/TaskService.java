@@ -7,7 +7,7 @@ import ru.egartech.documentflow.dto.v1.request.TaskPutRequestDto;
 import ru.egartech.documentflow.dto.v1.request.TaskSearchDto;
 import ru.egartech.documentflow.dto.v1.response.TaskResponseDto;
 import ru.egartech.documentflow.entity.Task;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 
 import java.util.List;
 
@@ -73,12 +73,17 @@ public interface TaskService {
     /**
      * Удалить задачу.
      * @param taskId ID задачи
-     * @throws ru.egartech.documentflow.exception.auth.ForbiddenException если пользователь не имеет право
-     * удалить задачу для документа
-     * @throws ru.egartech.documentflow.exception.task.WrongTaskStatusException если статус задачи
-     * не предполагает её удаление
+     * @see TaskService#deleteTask(Task)
      */
     void deleteTask(Long taskId);
+
+    /**
+     * Удалить задачу.
+     * @param task удаляемая задача
+     * @throws ru.egartech.documentflow.exception.auth.ForbiddenException если пользователь не имеет право
+     * удалять задачу для документа
+     */
+    void deleteTask(Task task);
 
     /**
      * Отклонить выполнение задачи. Задача станет доступна к редактированию сотруднику, выпустившему её.

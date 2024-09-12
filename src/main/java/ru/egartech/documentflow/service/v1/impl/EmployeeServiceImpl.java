@@ -15,10 +15,16 @@ import ru.egartech.documentflow.dto.v1.response.EmployeeResponseDto;
 import ru.egartech.documentflow.entity.Employee;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.EmployeeRepository;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
 import ru.egartech.documentflow.service.v1.EmployeeService;
 import ru.egartech.documentflow.service.v1.mapper.EmployeeMapper;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -60,6 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeResponseDto createEmployee(EmployeeRequestDto employeeRequestDto) {
         Employee employee = employeeMapper.convertToEntity(employeeRequestDto);
         employee.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
+        employee.setEmail(employeeRequestDto.getEmail().toLowerCase());
         employee.getAuthorities().add(new SimpleGrantedAuthority(Employee.Authority.ROLE_USER.name()));
 
         return employeeMapper.convertToDto(employeeRepository.save(employee));
@@ -74,6 +81,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.updateEntity(employeeRequestDto, employee);
 
         employee.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
+        employee.setEmail(employeeRequestDto.getEmail().toLowerCase());
+    }
+
+    @Transactional
+    @Override
+    public void updateEmployeeAuthorities(Long employeeId, List<String> employeeAuthorities) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("employeeId"));
+
+        Set<String> allowedAuthorities = Arrays.stream(Employee.Authority.values())
+                .map(Enum::name)
+                .collect(Collectors.toSet());
+        employee.setAuthorities(new HashSet<>());
+        employeeAuthorities.stream()
+                .filter(allowedAuthorities::contains)
+                .forEach(authority -> employee.getAuthorities().add(new SimpleGrantedAuthority(authority)));
     }
 
     @Transactional

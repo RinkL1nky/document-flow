@@ -7,7 +7,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 @Data
-public class ErrorDto {
+public class ErrorDtoItem {
 
     private final String code;
 

@@ -43,8 +43,17 @@ public interface EmailTaskService {
     /**
      * Удалить детали отправки электронной почты для соответствующей задачи.
      * @param taskId ID задачи
+     * @see EmailTaskService#deleteTaskDetails(EmailTask)
      */
     void deleteTaskDetails(Long taskId);
+
+    /**
+     * Удалить детали отправки электронной почты для соответствующей задачи.
+     * @param emailTask детали задачи
+     * @throws ru.egartech.documentflow.exception.auth.ForbiddenException если пользователь
+     * не является создателем задачи
+     */
+    void deleteTaskDetails(EmailTask emailTask);
 
     /**
      * Отправка письма по электронной почте согласно указанной задаче. В случае успеха,

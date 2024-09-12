@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="add-employee-username-unique-constraint" author="rinklinky">
+        <addUniqueConstraint tableName="employee" columnNames="username" constraintName="employee_username_unique"/>
+    </changeSet>
+
+    <changeSet id="add-employee-email-unique-constraint" author="rinklinky">
+        <addUniqueConstraint tableName="employee" columnNames="email" constraintName="employee_email_unique"/>
+    </changeSet>
+
+    <changeSet id="add-document-type-name-unique-constraint" author="rinklinky">
+        <addUniqueConstraint tableName="document_type" columnNames="name" constraintName="document_type_name_unique"/>
+    </changeSet>
+
+    <changeSet id="add-document-file-id-unique-constraint" author="rinklinky">
+        <addUniqueConstraint tableName="document" columnNames="file_id" constraintName="document_file_id_unique"/>
+    </changeSet>
+
+    <changeSet id="add-task-parent-id-unique-constraint" author="rinklinky">
+        <addUniqueConstraint tableName="task" columnNames="parent_id" constraintName="task_parent_id_unique"/>
+    </changeSet>
+
+    <changeSet id="add-deferrable-to-task-parent-id-unique-constraint" author="rinklinky">
+        <dropUniqueConstraint tableName="task" constraintName="task_parent_id_unique"/>
+        <addUniqueConstraint tableName="task" columnNames="parent_id" constraintName="task_parent_id_unique"
+                             deferrable="true" initiallyDeferred="true"/>
+    </changeSet>
+
+</databaseChangeLog>

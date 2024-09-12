@@ -18,6 +18,7 @@ import ru.egartech.documentflow.dto.v1.response.FileDownloadResponse;
 import ru.egartech.documentflow.dto.v1.response.FileUploadResponse;
 import ru.egartech.documentflow.entity.FileMetadata;
 import ru.egartech.documentflow.exception.auth.ForbiddenException;
+import ru.egartech.documentflow.exception.file.DraftFileIsRequiredException;
 import ru.egartech.documentflow.exception.file.FileIsExpiredException;
 import ru.egartech.documentflow.exception.file.FileStorageException;
 import ru.egartech.documentflow.exception.NotFoundException;
@@ -53,7 +54,7 @@ public class MinioStorageServiceImpl implements SimpleStorageService {
         try {
             Map<String, String> extraParams = new HashMap<>();
             extraParams.put("response-content-type", fileMeta.getContentType());
-            extraParams.put("response-content-disposition", "attachment; name=" + fileMeta.getFilename());
+            extraParams.put("response-content-disposition", "attachment; filename=%s".formatted(fileMeta.getFilename()));
 
             String downloadUrl = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
@@ -128,22 +129,43 @@ public class MinioStorageServiceImpl implements SimpleStorageService {
 
     @Override
     public FileMetadata applyDraft(Long draftFileId) {
-        FileMetadata draftMeta = fileMetaRepository.findById(draftFileId)
-                .orElseThrow(() -> new NotFoundException("fileId"));
-        if(draftMeta.isExpired()) {
-            throw new FileIsExpiredException();
-        }
+        FileMetadata draftFile = fileMetaRepository.findById(draftFileId)
+                .orElseThrow(() -> new NotFoundException("draftFileId"));
 
         FileMetadata newFileMeta = new FileMetadata();
         newFileMeta.setBucket(s3Properties.getCommonBucket());
-        newFileMeta.setPath(String.format("%s/%s", draftMeta.getUploader().getId(), UUID.randomUUID()));
-        newFileMeta.setContentType(draftMeta.getContentType());
-        newFileMeta.setFilename(draftMeta.getFilename());
-        newFileMeta = fileMetaRepository.save(newFileMeta);
+        newFileMeta.setPath(String.format("%s/%s", draftFile.getUploader().getId(), UUID.randomUUID()));
+        newFileMeta.setContentType(draftFile.getContentType());
+        newFileMeta.setFilename(draftFile.getFilename());
 
-        moveFile(draftMeta, newFileMeta);
+        applyDraft(draftFile, newFileMeta);
 
-        return newFileMeta;
+        return fileMetaRepository.save(newFileMeta);
+    }
+
+    @Override
+    public void applyDraft(Long draftFileId, Long destinationFileId) {
+        FileMetadata draftFile = fileMetaRepository.findById(draftFileId)
+                .orElseThrow(() -> new NotFoundException("draftFileId"));
+        FileMetadata destinationFile = fileMetaRepository.findById(destinationFileId)
+                .orElseThrow(() -> new NotFoundException("destinationFileId"));
+
+        applyDraft(draftFile, destinationFile);
+    }
+
+    @Override
+    public void applyDraft(FileMetadata draftFile, FileMetadata destinationFile) {
+        if(draftFile.isExpired() || destinationFile.isExpired()) {
+            throw new FileIsExpiredException();
+        }
+        if(!authenticationFacade.isCurrentEmployee(draftFile.getUploader())) {
+            throw new ForbiddenException();
+        }
+        if(!draftFile.getBucket().equals(s3Properties.getDraftBucket())) {
+            throw new DraftFileIsRequiredException();
+        }
+
+        moveFile(draftFile, destinationFile);
     }
 
     @Override

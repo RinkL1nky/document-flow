@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import ru.egartech.documentflow.dto.v1.request.DocumentTypeRequestDto;
 import ru.egartech.documentflow.dto.v1.request.DocumentTypeSearchDto;
 import ru.egartech.documentflow.dto.v1.response.DocumentTypeResponseDto;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 
 public interface DocumentTypeService {
 

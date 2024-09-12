@@ -25,7 +25,7 @@ public class EmployeeRequestDto {
     private final String lastName;
 
     @NotBlank
-    @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", flags = {Pattern.Flag.CASE_INSENSITIVE})
+    @Email(regexp = "^[a-z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-z0-9.-]+$", flags = {Pattern.Flag.CASE_INSENSITIVE})
     private final String email;
 
 }
