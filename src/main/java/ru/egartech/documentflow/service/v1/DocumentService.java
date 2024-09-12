@@ -5,7 +5,8 @@ import ru.egartech.documentflow.dto.v1.request.DocumentPostRequestDto;
 import ru.egartech.documentflow.dto.v1.request.DocumentPutRequestDto;
 import ru.egartech.documentflow.dto.v1.request.DocumentSearchDto;
 import ru.egartech.documentflow.dto.v1.response.DocumentResponseDto;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.entity.Document;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 
 public interface DocumentService {
 
@@ -54,9 +55,16 @@ public interface DocumentService {
     /**
      * Удалить документ и все его дочерние документы (корень и его дерево).
      * @param documentId ID документа
+     * @see DocumentService#deleteDocument(Document) 
+     */
+    void deleteDocument(Long documentId);
+
+    /**
+     * Удалить документ и все его дочерние документы (корень и его дерево).
+     * @param document документ
      * @throws ru.egartech.documentflow.exception.auth.ForbiddenException если пользователь
      * не является создателем документа
      */
-    void deleteDocument(Long documentId);
+    void deleteDocument(Document document);
 
 }

@@ -24,4 +24,10 @@
         <addUniqueConstraint tableName="task" columnNames="parent_id" constraintName="task_parent_id_unique"/>
     </changeSet>
 
+    <changeSet id="add-deferrable-to-task-parent-id-unique-constraint" author="rinklinky">
+        <dropUniqueConstraint tableName="task" constraintName="task_parent_id_unique"/>
+        <addUniqueConstraint tableName="task" columnNames="parent_id" constraintName="task_parent_id_unique"
+                             deferrable="true" initiallyDeferred="true"/>
+    </changeSet>
+
 </databaseChangeLog>

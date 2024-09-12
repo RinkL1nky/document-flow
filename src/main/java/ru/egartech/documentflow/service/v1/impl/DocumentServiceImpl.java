@@ -18,7 +18,7 @@ import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.exception.auth.ForbiddenException;
 import ru.egartech.documentflow.repository.DocumentRepository;
 import ru.egartech.documentflow.repository.DocumentTypeRepository;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
 import ru.egartech.documentflow.service.v1.DocumentService;
 import ru.egartech.documentflow.service.v1.SimpleStorageService;
@@ -113,17 +113,15 @@ public class DocumentServiceImpl implements DocumentService {
     @Transactional
     @Override
     public void deleteDocument(Long documentId) {
-        Document document = documentRepository.findById(documentId).orElse(null);
-        if(document == null) {
-            return;
-        }
+        documentRepository.findById(documentId)
+                .ifPresent(this::deleteDocument);
+    }
 
-        if(!authenticationFacade.isCurrentEmployee(document.getIssuer())) {
-            throw new ForbiddenException();
-        }
-
-        documentRepository.deleteById(documentId);
-        documentRepository.expireTreeFiles(documentId);
+    @Transactional
+    @Override
+    public void deleteDocument(Document document) {
+        documentRepository.expireTreeFiles(document.getId());
+        documentRepository.delete(document);
     }
 
 }

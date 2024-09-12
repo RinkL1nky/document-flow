@@ -14,7 +14,7 @@ import ru.egartech.documentflow.dto.v1.response.DocumentTypeResponseDto;
 import ru.egartech.documentflow.entity.DocumentType;
 import ru.egartech.documentflow.exception.NotFoundException;
 import ru.egartech.documentflow.repository.DocumentTypeRepository;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 import ru.egartech.documentflow.search.GenericSpecificationBuilder;
 import ru.egartech.documentflow.service.v1.DocumentTypeService;
 import ru.egartech.documentflow.service.v1.mapper.DocumentTypeMapper;

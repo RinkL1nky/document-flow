@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.egartech.documentflow.dto.v1.request.EmployeeRequestDto;
 import ru.egartech.documentflow.dto.v1.request.EmployeeSearchDto;
 import ru.egartech.documentflow.dto.v1.response.EmployeeResponseDto;
-import ru.egartech.documentflow.responsewrapper.PageWrapper;
+import ru.egartech.documentflow.dto.v1.response.PageWrapper;
 
 import java.util.List;
 

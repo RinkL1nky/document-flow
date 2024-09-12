@@ -63,7 +63,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSp
         SELECT d.id, d.file_id FROM document d
         JOIN document_tree ON d.parent_id = document_tree.id
     )
-    UPDATE file_metadata f SET created_at = NOW() WHERE f.id IN (SELECT node.file_id FROM document_tree node)
+    UPDATE file_metadata f SET expires_at = NOW() WHERE f.id IN (SELECT node.file_id FROM document_tree node)
     """, nativeQuery = true)
     void expireTreeFiles(Long rootDocumentId);
 
